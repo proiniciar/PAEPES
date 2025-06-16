@@ -130,52 +130,56 @@
 
     <script>
         // Função para ler e processar o arquivo CSV
-        async function loadProjects() {
-            const response = await fetch('projetos_paepes.csv');
-            const data = await response.text();
-            const lines = data.split('\n').slice(1); // Ignora a linha do cabeçalho
-            const container = document.getElementById('projectList');
+       async function loadProjects() {
+    const response = await fetch('projetos_paepes.csv');
+    const data = await response.text();
 
-            lines.forEach((line, index) => {
-                const [nome, resumo, coordenador] = line.split(',').map(item => item.replace(/(^"|"$)/g, '').trim());
+    const lines = data.trim().split('\n').slice(1); // Remove espaços extras e ignora cabeçalho
+    const container = document.getElementById('projectList');
 
-                // Remove possíveis aspas remanescentes do nome do coordenador
-                const coordenadorLimpo = coordenador.replace(/(^"|"$)/g, '').trim();
+    lines.forEach((line, index) => {
+        if (!line.trim()) return; // Ignora linhas vazias
 
-                // Cria os elementos HTML dinamicamente
-                const projectDiv = document.createElement('div');
-                projectDiv.classList.add('project');
+        const parts = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
 
-                const titleContainer = document.createElement('div');
-                titleContainer.classList.add('title-container');
-                titleContainer.onclick = () => toggleContent(`content${index}`);
+        if (!parts || parts.length < 3) return; // Validação de segurança
 
-                const titleDiv = document.createElement('div');
-                titleDiv.classList.add('title');
-                titleDiv.textContent = nome;
+        const [nome, resumo, coordenador] = parts.map(item => item.replace(/(^"|"$)/g, '').trim());
 
-                const copyIcon = document.createElement('i');
-                copyIcon.classList.add('fas', 'fa-copy', 'copy-icon');
-                copyIcon.onclick = (event) => copyTitle(event, nome);
+        const projectDiv = document.createElement('div');
+        projectDiv.classList.add('project');
 
-                titleContainer.appendChild(titleDiv);
-                titleContainer.appendChild(copyIcon);
+        const titleContainer = document.createElement('div');
+        titleContainer.classList.add('title-container');
+        titleContainer.onclick = () => toggleContent(`content${index}`);
 
-                const contentDiv = document.createElement('div');
-                contentDiv.classList.add('content');
-                contentDiv.id = `content${index}`;
-                contentDiv.innerHTML = `<p><strong>Resumo:</strong> ${resumo}</p>
-                                        <p><strong>Proponente:</strong> <span class="small-text">${coordenadorLimpo}</span></p>
-                                        <p>
-                                            <button class="go-btn" onclick="goToInsc()">Clique e inicie sua inscrição</button>
-                                            <button class="go-btn" onclick="goToPerf()">Finalize a sua inscrião aqui</button>
-                                        </p>`;
+        const titleDiv = document.createElement('div');
+        titleDiv.classList.add('title');
+        titleDiv.textContent = nome;
 
-                projectDiv.appendChild(titleContainer);
-                projectDiv.appendChild(contentDiv);
-                container.appendChild(projectDiv);
-            });
-        }
+        const copyIcon = document.createElement('i');
+        copyIcon.classList.add('fas', 'fa-copy', 'copy-icon');
+        copyIcon.onclick = (event) => copyTitle(event, nome);
+
+        titleContainer.appendChild(titleDiv);
+        titleContainer.appendChild(copyIcon);
+
+        const contentDiv = document.createElement('div');
+        contentDiv.classList.add('content');
+        contentDiv.id = `content${index}`;
+        contentDiv.innerHTML = `<p><strong>Resumo:</strong> ${resumo}</p>
+                                <p><strong>Proponente:</strong> <span class="small-text">${coordenador}</span></p>
+                                <p>
+                                    <button class="go-btn" onclick="goToInsc()">Clique e inicie sua inscrição</button>
+                                    <button class="go-btn" onclick="goToPerf()">Finalize a sua inscrição aqui</button>
+                                </p>`;
+
+        projectDiv.appendChild(titleContainer);
+        projectDiv.appendChild(contentDiv);
+        container.appendChild(projectDiv);
+    });
+}
+
 
         // Carrega os projetos ao iniciar a página
         loadProjects();
