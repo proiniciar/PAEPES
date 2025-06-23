@@ -131,7 +131,7 @@
     <script>
         // Função para ler e processar o arquivo CSV
        async function loadProjects() {
-    const response = await fetch('projetos_paepe.csv');
+    const response = await fetch('projetos_paepes.csv');
     const data = await response.text();
 
     const lines = data.trim().split('\n').slice(1); // Remove espaços extras e ignora cabeçalho
