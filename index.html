@@ -1,47 +1,96 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PAEPES</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <title>PAEPES 2026</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- PapaParse: leitura e interpretação de arquivos CSV -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
     <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: Arial, sans-serif;
             line-height: 1.6;
             margin: 0;
             padding: 0;
             background-color: #f4f4f4;
+            color: #333;
         }
+
+        /* CABEÇALHO */
+
         .header {
             text-align: center;
             padding: 20px;
             background-color: #f8f9fa;
             border-bottom: 2px solid #ddd;
         }
+
         .header img {
-            max-width: 80%; 
-            height: auto;   
+            max-width: 80%;
+            height: auto;
         }
+
         .header h1 {
             margin: 10px 0;
             font-size: 1em;
             color: #333;
         }
+
+        /* BANNERS */
+
         .banner {
             background-color: #e9ecef;
-            padding: 10px;
+            padding: 12px;
             text-align: center;
-            font-size: 0.75em;
+            font-size: 0.85em;
             color: #555;
-            margin: 10px 0;
+            margin: 10px auto;
             border-radius: 5px;
+            width: 90%;
         }
+
+        /* BOTÃO VOLTAR */
+
+        .back-button {
+            padding: 10px 5%;
+        }
+
+        .back-link {
+            font-size: 12px;
+            color: #007bff;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            transition: background-color 0.3s;
+        }
+
+        .back-link:hover {
+            background-color: #e0e0e0;
+        }
+
+        /* LISTA DE PROJETOS */
+
         .container {
-            width: 80%;
+            width: 90%;
+            max-width: 1100px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 15px 0 30px;
         }
+
         .project {
             margin: 15px 0;
             padding: 15px;
@@ -49,185 +98,639 @@
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
+
         .title-container {
             display: flex;
             align-items: center;
             justify-content: space-between;
             cursor: pointer;
+            gap: 12px;
         }
+
         .title {
-            font-size: 0.8em;
+            font-size: 0.9em;
             color: #007bff;
             flex: 1;
+            font-weight: bold;
         }
+
+        .title-container:hover .title {
+            color: #0056b3;
+        }
+
         .copy-icon {
             cursor: pointer;
             color: #007bff;
-            font-size: 0.8em;
-            margin-left: 10px;
+            font-size: 1em;
+            padding: 5px;
             transition: color 0.3s;
         }
+
         .copy-icon:hover {
             color: #0056b3;
         }
+
+        /* CONTEÚDO EXPANSÍVEL */
+
         .content {
             display: none;
-            margin-top: 10px;
-            padding: 10px;
+            margin-top: 12px;
+            padding: 15px;
             border: 1px solid #ddd;
             border-radius: 5px;
             background-color: #f9f9f9;
+            overflow-wrap: anywhere;
         }
+
         .content p {
-            margin: 0;
+            margin: 8px 0;
         }
-        .back-link {
-            font-size: 10px;
-            color: #007bff;
-            text-decoration: none;
-            padding: 5px 10px;
-            border-radius: 2px;
-            transition: background-color 0.3s;
+
+        .small-text {
+            font-size: 0.85em;
         }
-        .back-link:hover {
-            background-color: #e0e0e0;
-        }
+
+        /* BOTÕES */
+
         .go-btn {
             background-color: #007bff;
             color: white;
             border: 2px solid #007bff;
             border-radius: 25px;
-            padding: 5px 10px;
-            font-size: 0.6em;
+            padding: 7px 12px;
+            font-size: 0.75em;
             cursor: pointer;
             transition: background-color 0.3s, color 0.3s;
-            margin: 2px;
+            margin: 4px 3px;
         }
+
         .go-btn:hover {
             background-color: white;
             color: #007bff;
         }
-        .small-text {
-            font-size: 0.8em;
+
+        /* MENSAGENS */
+
+        .message {
+            text-align: center;
+            padding: 20px;
+            margin: 20px 0;
+            background-color: white;
+            border-radius: 8px;
+            color: #555;
         }
+
+        .error {
+            color: #b02a37;
+            border: 1px solid #f1aeb5;
+            background-color: #f8d7da;
+        }
+
+        /* RESPONSIVIDADE */
+
+        @media (max-width: 600px) {
+
+            .header {
+                padding: 15px 10px;
+            }
+
+            .header img {
+                max-width: 95%;
+            }
+
+            .header h1 {
+                font-size: 0.85em;
+            }
+
+            .banner {
+                width: 94%;
+                font-size: 0.75em;
+            }
+
+            .container {
+                width: 94%;
+            }
+
+            .project {
+                padding: 12px;
+            }
+
+            .title {
+                font-size: 0.8em;
+            }
+
+            .content {
+                padding: 10px;
+                font-size: 0.9em;
+            }
+
+            .go-btn {
+                display: block;
+                width: 100%;
+                margin: 8px 0;
+            }
+
+        }
+
     </style>
+
 </head>
+
 <body>
+
+    <!-- CABEÇALHO -->
+
     <div class="header">
-        <img src="https://proiniciar.github.io/AIPA/logo.png" alt="Logo">
-        <h1>Projetos PAEPES 2026 | PR-4 | Programa de Apoio à Equidade e à Permanência no Ensino Superior</h1>
+
+        <img src="https://proiniciar.github.io/AIPA/logo.png"
+             alt="Logo">
+
+        <h1>
+            Projetos PAEPES 2026 | PR-4 |
+            Programa de Apoio à Equidade e à Permanência no Ensino Superior
+        </h1>
+
     </div>
+
+    <!-- VOLTAR -->
 
     <div class="back-button">
-        <a href="https://proiniciar.uerj.br/course/index.php?categoryid=21" class="back-link">← Voltar</a>
+
+        <a href="https://proiniciar.uerj.br/course/index.php?categoryid=21"
+           class="back-link">
+
+            ← Voltar
+
+        </a>
+
+    </div>
+
+    <!-- AVISOS -->
+
+    <div class="banner">
+
+        Conforme o Edital PAEPES 2026, a lista de projetos aprovados
+        e contemplados com bolsas será disponibilizada em 24/03/2026.
+
     </div>
 
     <div class="banner">
-        Conforme o Edital PAEPES 2026, a lista de projetos aprovados e contemplados com bolsas será disponibilizada em 24/03/2026.
+
+        <strong>
+            Solicitamos aos candidatos da modalidade PAEPES
+            (Bolsa de Apoio à Gestão) que enviem seus currículos
+            para o e-mail paepes.pr4@uerj.br.
+        </strong>
+
     </div>
 
-    <div class="banner">
-        <strong>Solicitamos aos candidatos da modalidade PAEPES (Bolsa de Apoio à Gestão) que enviem seus currículos para o e-mail paepes.pr4@uerj.br.</strong>
+    <!-- LISTA DE PROJETOS -->
+
+    <div class="container" id="projectList">
+
+        <div class="message">
+            <i class="fas fa-spinner fa-spin"></i>
+            Carregando projetos...
+        </div>
+
     </div>
-    
-    <div class="container" id="projectList"></div> 
+
 
     <script>
-        // Função para ler e processar o arquivo CSV
-       async function loadProjects() {
-    const response = await fetch('projetos_paepes.csv');
-    const data = await response.text();
 
-    const lines = data.trim().split('\n').slice(1); // Remove espaços extras e ignora cabeçalho
-    const container = document.getElementById('projectList');
+        // ==========================================
+        // CONFIGURAÇÕES
+        // ==========================================
 
-    lines.forEach((line, index) => {
-        if (!line.trim()) return; // Ignora linhas vazias
+        const CSV_FILE = 'projetos_paepes.csv';
 
-        const parts = line.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
+        const URL_INSCRICAO =
+            'https://www.formularios.uerj.br/index.php/2?lang=pt-BR';
 
-        if (!parts || parts.length < 3) return; // Validação de segurança
-
-        const [nome, resumo, coordenador] = parts.map(item => item.replace(/(^"|"$)/g, '').trim());
-
-        const projectDiv = document.createElement('div');
-        projectDiv.classList.add('project');
-
-        const titleContainer = document.createElement('div');
-        titleContainer.classList.add('title-container');
-        titleContainer.onclick = () => toggleContent(`content${index}`);
-
-        const titleDiv = document.createElement('div');
-        titleDiv.classList.add('title');
-        titleDiv.textContent = nome;
-
-        const copyIcon = document.createElement('i');
-        copyIcon.classList.add('fas', 'fa-copy', 'copy-icon');
-        copyIcon.onclick = (event) => copyTitle(event, nome);
-
-        titleContainer.appendChild(titleDiv);
-        titleContainer.appendChild(copyIcon);
-
-        const contentDiv = document.createElement('div');
-        contentDiv.classList.add('content');
-        contentDiv.id = `content${index}`;
-        contentDiv.innerHTML = `<p><strong>Resumo:</strong> ${resumo}</p>
-                                <p><strong>Proponente:</strong> <span class="small-text">${coordenador}</span></p>
-                                <p>
-                                    <button class="go-btn" onclick="goToInsc()">Clique e inicie sua inscrição</button>
-                                    <button class="go-btn" onclick="goToPerf()">Finalize a sua inscrição aqui</button>
-                                </p>`;
-
-        projectDiv.appendChild(titleContainer);
-        projectDiv.appendChild(contentDiv);
-        container.appendChild(projectDiv);
-    });
-}
+        const URL_FINALIZACAO =
+            'https://www.formularios.uerj.br/index.php/83743?lang=pt-BR';
 
 
-        // Carrega os projetos ao iniciar a página
-        loadProjects();
-        
-        function toggleContent(contentId) {
-            var content = document.getElementById(contentId);
-            content.style.display = content.style.display === 'block' ? 'none' : 'block';
+        // ==========================================
+        // CARREGAMENTO DOS PROJETOS
+        // ==========================================
+
+        async function loadProjects() {
+
+            const container =
+                document.getElementById('projectList');
+
+            container.innerHTML = '';
+
+            try {
+
+                // Verifica se a biblioteca foi carregada
+
+                if (typeof Papa === 'undefined') {
+
+                    throw new Error(
+                        'A biblioteca de leitura CSV não foi carregada.'
+                    );
+
+                }
+
+                // Busca o arquivo CSV
+
+                const response = await fetch(CSV_FILE);
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        'Arquivo CSV não encontrado. Verifique o endereço.'
+                    );
+
+                }
+
+                const data = await response.text();
+
+                // Interpreta o CSV
+
+                const resultado = Papa.parse(data, {
+
+                    header: true,
+
+                    skipEmptyLines: true,
+
+                    delimiter: ',',
+
+                    quoteChar: '"',
+
+                    escapeChar: '"',
+
+                    transformHeader: header =>
+                        header.replace(/^\uFEFF/, '').trim()
+
+                });
+
+                // Verifica erros de interpretação
+
+                if (resultado.errors.length > 0) {
+
+                    console.warn(
+                        'Problemas encontrados no CSV:',
+                        resultado.errors
+                    );
+
+                }
+
+                const projetos = resultado.data;
+
+                if (projetos.length === 0) {
+
+                    container.innerHTML =
+                        '<div class="message">Nenhum projeto encontrado.</div>';
+
+                    return;
+
+                }
+
+                // Cria os projetos
+
+                let totalProjetos = 0;
+
+                projetos.forEach((projeto, index) => {
+
+                    const nome =
+                        (projeto.nome || '').trim();
+
+                    const resumo =
+                        (projeto.resumo || '').trim();
+
+                    const coordenador =
+                        (projeto.coordenador || '').trim();
+
+                    // Ignora registros sem título
+
+                    if (!nome) return;
+
+                    totalProjetos++;
+
+                    // Cria o bloco do projeto
+
+                    const projectDiv =
+                        document.createElement('div');
+
+                    projectDiv.className = 'project';
+
+
+                    // TÍTULO
+
+                    const titleContainer =
+                        document.createElement('div');
+
+                    titleContainer.className = 'title-container';
+
+                    titleContainer.setAttribute('role', 'button');
+
+                    titleContainer.setAttribute('tabindex', '0');
+
+                    titleContainer.setAttribute('aria-expanded', 'false');
+
+
+                    const titleDiv =
+                        document.createElement('div');
+
+                    titleDiv.className = 'title';
+
+                    titleDiv.textContent = nome;
+
+
+                    // ÍCONE DE CÓPIA
+
+                    const copyIcon =
+                        document.createElement('i');
+
+                    copyIcon.className =
+                        'fas fa-copy copy-icon';
+
+                    copyIcon.title = 'Copiar título';
+
+                    copyIcon.setAttribute('role', 'button');
+
+                    copyIcon.setAttribute('aria-label', 'Copiar título');
+
+
+                    copyIcon.onclick = (event) => {
+
+                        event.stopPropagation();
+
+                        copyTitle(nome);
+
+                    };
+
+
+                    // CONTEÚDO EXPANSÍVEL
+
+                    const contentDiv =
+                        document.createElement('div');
+
+                    contentDiv.className = 'content';
+
+                    contentDiv.id = `content${index}`;
+
+
+                    // RESUMO
+
+                    const resumoP =
+                        document.createElement('p');
+
+                    const resumoLabel =
+                        document.createElement('strong');
+
+                    resumoLabel.textContent = 'Resumo: ';
+
+                    resumoP.appendChild(resumoLabel);
+
+                    resumoP.appendChild(
+                        document.createTextNode(resumo)
+                    );
+
+
+                    // COORDENADOR
+
+                    const coordenadorP =
+                        document.createElement('p');
+
+                    const coordenadorLabel =
+                        document.createElement('strong');
+
+                    coordenadorLabel.textContent =
+                        'Proponente: ';
+
+                    const coordenadorSpan =
+                        document.createElement('span');
+
+                    coordenadorSpan.className = 'small-text';
+
+                    coordenadorSpan.textContent = coordenador;
+
+                    coordenadorP.appendChild(coordenadorLabel);
+
+                    coordenadorP.appendChild(coordenadorSpan);
+
+
+                    // BOTÕES DE INSCRIÇÃO
+
+                    const buttonsP =
+                        document.createElement('p');
+
+
+                    const inscButton =
+                        document.createElement('button');
+
+                    inscButton.className = 'go-btn';
+
+                    inscButton.textContent =
+                        'Clique e inicie sua inscrição';
+
+                    inscButton.onclick = goToInsc;
+
+
+                    const perfButton =
+                        document.createElement('button');
+
+                    perfButton.className = 'go-btn';
+
+                    perfButton.textContent =
+                        'Finalize a sua inscrição aqui';
+
+                    perfButton.onclick = goToPerf;
+
+
+                    buttonsP.appendChild(inscButton);
+
+                    buttonsP.appendChild(perfButton);
+
+
+                    // MONTA O CONTEÚDO
+
+                    contentDiv.appendChild(resumoP);
+
+                    contentDiv.appendChild(coordenadorP);
+
+                    contentDiv.appendChild(buttonsP);
+
+
+                    // MONTA O PROJETO
+
+                    titleContainer.appendChild(titleDiv);
+
+                    titleContainer.appendChild(copyIcon);
+
+                    projectDiv.appendChild(titleContainer);
+
+                    projectDiv.appendChild(contentDiv);
+
+                    container.appendChild(projectDiv);
+
+
+                    // EVENTO PARA ABRIR E FECHAR
+
+                    function toggleProject() {
+
+                        const aberto =
+                            contentDiv.style.display === 'block';
+
+                        contentDiv.style.display =
+                            aberto ? 'none' : 'block';
+
+                        titleContainer.setAttribute(
+                            'aria-expanded',
+                            String(!aberto)
+                        );
+
+                    }
+
+
+                    titleContainer.onclick = toggleProject;
+
+                    titleContainer.onkeydown = (event) => {
+
+                        if (
+                            event.key === 'Enter' ||
+                            event.key === ' '
+                        ) {
+
+                            event.preventDefault();
+
+                            toggleProject();
+
+                        }
+
+                    };
+
+                });
+
+
+                // Verifica se existem projetos válidos
+
+                if (totalProjetos === 0) {
+
+                    container.innerHTML =
+                        '<div class="message">Nenhum projeto válido encontrado no arquivo CSV.</div>';
+
+                }
+
+                console.log(
+                    `${totalProjetos} projetos carregados com sucesso.`
+                );
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    'Erro ao carregar projetos:',
+                    error
+                );
+
+                container.innerHTML = '';
+
+                const errorDiv =
+                    document.createElement('div');
+
+                errorDiv.className = 'message error';
+
+                errorDiv.textContent =
+                    'Não foi possível carregar a lista de projetos. Verifique o arquivo CSV e tente novamente.';
+
+                container.appendChild(errorDiv);
+
+            }
+
         }
 
-        function copyTitle(event, titleText) {
-            var tempInput = document.createElement("input");
-            tempInput.value = titleText;
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            document.execCommand("copy");
-            document.body.removeChild(tempInput);
-            alert("Título copiado: " + titleText);
-            event.stopPropagation(); // Impede o toggle quando clica no ícone
+
+        // ==========================================
+        // COPIAR TÍTULO
+        // ==========================================
+
+        async function copyTitle(titleText) {
+
+            try {
+
+                if (navigator.clipboard &&
+                    window.isSecureContext) {
+
+                    await navigator.clipboard.writeText(titleText);
+
+                } else {
+
+                    const tempInput =
+                        document.createElement('textarea');
+
+                    tempInput.value = titleText;
+
+                    tempInput.style.position = 'fixed';
+
+                    tempInput.style.opacity = '0';
+
+                    document.body.appendChild(tempInput);
+
+                    tempInput.select();
+
+                    const sucesso =
+                        document.execCommand('copy');
+
+                    document.body.removeChild(tempInput);
+
+                    if (!sucesso) {
+
+                        throw new Error('Falha ao copiar.');
+
+                    }
+
+                }
+
+                alert('Título copiado com sucesso!');
+
+            }
+
+            catch (error) {
+
+                console.error('Erro ao copiar título:', error);
+
+                alert('Não foi possível copiar o título.');
+
+            }
+
         }
+
+
+        // ==========================================
+        // LINKS DE INSCRIÇÃO
+        // ==========================================
 
         function goToInsc() {
-            window.location.href = "https://www.formularios.uerj.br/index.php/2?lang=pt-BR";
+
+            window.location.href = URL_INSCRICAO;
+
         }
+
 
         function goToPerf() {
-            window.location.href = "https://www.formularios.uerj.br/index.php/83743?lang=pt-BR";
+
+            window.location.href = URL_FINALIZACAO;
+
         }
 
-        document.querySelectorAll('.title-container').forEach(container => {
-        const titleText = container.querySelector('.title').innerText;
 
-        // Cria o novo HTML
-        const newHTML = `
-            <div class="title-container" onclick="toggleContent('content0')">
-                <div class="title">${titleText}</div>
-                <i class="fas fa-copy copy-icon" onclick="copyTitle(event, '${titleText}')"></i>
-            </div>
-        `;
+        // ==========================================
+        // INICIALIZAÇÃO
+        // ==========================================
 
-        // Substitui o conteúdo
-        container.outerHTML = newHTML;
-    }); 
+        document.addEventListener(
+            'DOMContentLoaded',
+            loadProjects
+        );
+
     </script>
+
 </body>
+
 </html>
-
-
